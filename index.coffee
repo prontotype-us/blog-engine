@@ -82,4 +82,4 @@ module.exports = (authors, entry_authors, entry_topics, {entries_dir, drafts_dir
         topics = entry_topics[slug] || []
         {slug, date, name, html, author, topics}
 
-    return {listEntries, summarizeEntries, getEntry}
+    return {listEntries, summarizeEntries, getEntry, getDraft}
