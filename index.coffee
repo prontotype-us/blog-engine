@@ -34,7 +34,10 @@ md = new MarkdownIt
 
 md = md.use(MarkdownItMathjax())
 
-module.exports = (entries_dir, authors, entry_authors, entry_topics) ->
+module.exports = (authors, entry_authors, entry_topics, {entries_dir, drafts_dir}) ->
+
+    entries_dir ||= "./entries"
+    drafts_dir ||= "./drafts"
 
     listEntries = ->
         entries = fs.readdirSync(entries_dir)
@@ -63,6 +66,17 @@ module.exports = (entries_dir, authors, entry_authors, entry_topics) ->
         filename = slug + '.md'
         name = unslugify slug
         content = fs.readFileSync entries_dir + '/' + filename, 'utf8'
+        html = md.render content
+        author = authors[entry_authors[slug]]
+        topics = entry_topics[slug] || []
+        {slug, date, name, html, author, topics}
+
+    getDraft = (req, res) ->
+        {slug} = req.params
+        date = moment(slug.split('-')[0])
+        filename = slug + '.md'
+        name = unslugify slug
+        content = fs.readFileSync drafts_dir + '/' + filename, 'utf8'
         html = md.render content
         author = authors[entry_authors[slug]]
         topics = entry_topics[slug] || []
